@@ -1,4 +1,9 @@
 <?php
+
+// Set the time zone to +5:45
+date_default_timezone_set('Asia/Kathmandu');
+
+
 function displayCalendar($year, $filePath) {
     // Read the JSON file
     $jsonData = file_get_contents($filePath);
@@ -26,6 +31,26 @@ function displayCalendar($year, $filePath) {
     }
     echo "</tr>";
 
+    // Define selected year and month
+    $selectedYear = isset($_GET['year']) ? (int)$_GET['year'] : date('Y');
+    $selectedMonth = isset($_GET['month']) ? (int)$_GET['month'] : date('m');
+
+    // Get today's date
+    $today = date('Y-m-d');
+
+    // Define the months array
+    $months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+
+    // Extract year and month from $metadata['en']
+    $metadataYearMonth = explode(' ', $metadata['en']);
+    $metadataYear = $metadataYearMonth[1];
+    $metadataMonthNames = explode('/', $metadataYearMonth[0]);
+    $metadataMonth1 = array_search($metadataMonthNames[0], $months) + 1; // Get the first month and convert to 1-based index
+    $metadataMonth2 = isset($metadataMonthNames[1]) ? array_search($metadataMonthNames[1], $months) + 1 : $metadataMonth1; // Get the second month if exists
+
     // Display calendar days
     echo "<tr>";
     $currentDay = 0;
@@ -39,10 +64,26 @@ function displayCalendar($year, $filePath) {
             }
         }
 
+        // Format the calendar date to match the format of $today
+        $calendarDate = sprintf('%04d-%02d-%02d', $selectedYear, $selectedMonth, $day['d']);
+
+        // Check if the calendar date matches today's date
+        $isToday = ($calendarDate == $today) ? "class='today'" : "";
+
+        // Check if $day['e'] matches today's date in either of the two months
+        $dayDate1 = sprintf('%04d-%02d-%02d', $metadataYear, $metadataMonth1, $day['e']);
+        $dayDate2 = sprintf('%04d-%02d-%02d', $metadataYear, $metadataMonth2, $day['e']);
+        $isDayToday = ($dayDate1 == $today || $dayDate2 == $today) ? "class='today'" : "";
+
         // Display the day
-        $class = $day['h'] ? "style='color:red; font-width: 400;'" : "";
-        echo "<td $class>";
-        echo $day['n'] ? "<span class='nep-day'>" . $day['n'] . "</span><br><span class='eng-day'>" . $day['e'] . "</span>" : "";
+        $class = $day['h'] ? "style='color:red; font-weight: 400;'" : "";
+        echo "<td $class $isToday $isDayToday>";
+        if ($day['n']) {
+            echo "<span class='festiv' data-fulltext='" . htmlspecialchars($day['f'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars(mb_strimwidth($day['f'], 0, 20, '...'), ENT_QUOTES, 'UTF-8') . "</span><br>";
+            echo "<span class='nep-day'>" . htmlspecialchars($day['n'], ENT_QUOTES, 'UTF-8') . "</span><br>";
+            echo "<span class='tithi'>" . htmlspecialchars($day['t'], ENT_QUOTES, 'UTF-8') . "</span><br>";
+            echo "<span class='eng-day'>" . htmlspecialchars($day['e'], ENT_QUOTES, 'UTF-8') . "</span>";
+        }
         echo "</td>";
         $currentDay++;
 
@@ -58,7 +99,6 @@ function displayCalendar($year, $filePath) {
         echo "<td></td>";
         $currentDay++;
     }
-
     echo "</tr>";
     echo "</table>";
 }
@@ -89,7 +129,7 @@ function getNepaliMonths() {
 }
 
 // Get the current Nepali date (use actual BS logic here if available)
-$currentBSYear = 2080; // Replace this with a dynamic calculation for BS year
+$currentBSYear = 2081; // Replace this with a dynamic calculation for BS year
 $currentBSMonth = 10; // Replace this with a dynamic calculation for BS month
 
 // Base directory where all year folders are stored
@@ -168,10 +208,20 @@ $metadata = $data['metadata'];
             echo "<p>No data available for Year: $selectedYear, Month: {$months[$selectedMonth]}.</p>";
         }
         ?>
-
+        <div class="events text-left">
+            <span>
+                <?php 
+                    echo "Holidays and Festivals:</br>";
+                    $holiFest = $data['holiFest'];
+                    foreach ($holiFest as $event) {
+                        echo htmlspecialchars($event, ENT_QUOTES, 'UTF-8') . "<br>";
+                    }
+                
+                ?>
+                    </span>
+        </div>
     </div>
 
     
 </body>
 </html>
-

@@ -8,11 +8,11 @@ body {
 }
 
 .container {
-    max-width: 500px;
-    margin: 50px auto;
+    max-width: 800px;
+    margin: 10px auto;
     padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
+    background: #fff;
+    border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
@@ -25,12 +25,13 @@ body {
 }
 
 .year-month {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
 .year-month.np {
     text-align: left;
+    
 }
 
 .year-month.en {
@@ -60,10 +61,10 @@ select:focus {
 
 /* Calendar Table */
 table {
-    width: 500px;
+    width: 800px;
     border-collapse: collapse;
     text-align:center;
-    margin-top: 20px;
+    margin-top: 5px;
     margin-bottom:20px;
     margin-left:auto;
     margin-right:auto;
@@ -71,31 +72,36 @@ table {
 }
 
 th, td {
-    padding: 10px;
+    padding: 20px;
     text-align: center;
     border: 1px solid #ddd;
 }
 
 th {
-    background: #3498db;
+    background: rgb(113, 125, 136);
     color: #fff;
     font-weight: bold;
+    padding: 10px 20px;
 }
 
 td {
     background: #f9f9f9;
     color: #2c3e50;
     position: relative;
+
 }
 
-td[style*="background-color:yellow;"] {
-    background: #f1c40f;
-    color: #2c3e50;
-    font-weight: bold;
+td:hover{
+    background: #999999;
+    transition: 0.2s ease-in-out;
 }
 
-.nep-day{
-    font-size: 25px;
+.nep-day {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
 }
 
 .eng-day{
@@ -105,4 +111,48 @@ td[style*="background-color:yellow;"] {
     bottom: 2px;
 }
 
+.tithi{
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+}
 
+.festiv {
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+}
+
+.festiv:hover::after {
+    content: attr(data-fulltext);
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.today {
+    background-color: #c8c8c8; /* Highlight today's date */
+}
+
+.events {
+    font-weight: bold;
+}
+
+.text-left {
+    text-align: left;
+}
