@@ -12,10 +12,12 @@ This project displays a Nepali calendar with holidays and festivals. It includes
 ## Installation
 
 1. Clone the repository:
-   ```sh
+   ```
    git clone https://github.com/TheSagarKhatiwada/nepali-calendar.git
+   ```
+   ```
    cd nepali-calendar
-
+    ```
 2. Ensure you have PHP installed on your machine.
 
 Start a local server (e.g., using XAMPP or built-in PHP server):
