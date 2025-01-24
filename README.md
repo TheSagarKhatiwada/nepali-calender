@@ -1,76 +1,3 @@
-# Nepali Calendar
-
-This project displays a Nepali calendar with holidays and festivals. It includes functionality to view the calendar for different months and years, and highlights today's date.
-
-## Features
-
-- Display Nepali calendar with English and Nepali dates.
-- Highlight today's date.
-- Show holidays and festivals for the selected month.
-- Automatically load the current month and year on page refresh.
-
-## Installation
-
-1. Clone the repository:
-   ```
-   git clone https://github.com/TheSagarKhatiwada/nepali-calendar.git
-   ```
-   ```
-   cd nepali-calendar
-    ```
-2. Ensure you have PHP installed on your machine.
-
-Start a local server (e.g., using XAMPP or built-in PHP server):
-
-php -S localhost:8000
-
-Open your browser and navigate to http://localhost:8000.
-
-Usage
--The calendar will automatically load the current month and year.
--Use the dropdowns to select a different year and month.
--The holidays and festivals for the selected month will be displayed below the calendar.
-
-File Structure
--index.php: Main file that displays the calendar.
--style.css: Stylesheet for the calendar.
--data: Directory containing JSON files for each month and year.
--README.md: This file.
-
-JSON Data Format
-Each JSON file in the data directory should follow this format:
-
-{
-  "metadata": {
-    "en": "Jan/Feb 2024",
-    "np": "माघ 2081"
-  },
-  "days": [
-    {
-      "n": "१",
-      "e": "15",
-      "t": "पुर्णिमा",
-      "f": "पशुपतिनाथको छायाँ दर्शन",
-      "h": false,
-      "d": 1
-    },
-    ...
-  ],
-  "holiFest": [
-    "०१माघे संक्रान्ति, माघी पर्व, देवघाटमा मकरस्नान आरम्भ",
-    "०२राष्ट्रिय भुकम्प सुरक्षा दिवस",
-    ...
-  ],
-  "marriage": ["४ र २५ गते"],
-  "bratabandha": ["२ ,३ ,१८ र २५ गते"]
-}
-
-Sure, here is an example of a 
-
-README.md
-
- file for your project:
-
 ```markdown
 # Nepali Calendar
 
@@ -88,6 +15,8 @@ This project displays a Nepali calendar with holidays and festivals. It includes
 1. Clone the repository:
    ```sh
    git clone https://github.com/your-username/nepali-calendar.git
+   ```
+   ```sh
    cd nepali-calendar
    ```
 
