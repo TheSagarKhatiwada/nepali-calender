@@ -9,7 +9,7 @@ body {
 
 .container {
     max-width: 800px;
-    margin: 10px auto;
+    /* margin: 10px auto; */
     padding: 20px;
     background: #fff;
     border-radius: 15px;
@@ -142,17 +142,16 @@ td:hover{
     padding: 5px;
     border-radius: 3px;
     white-space: nowrap;
-    z-index: 1;
+    z-index: 999;
 }
 
 .today {
     background-color: #c8c8c8; /* Highlight today's date */
 }
 
-.events {
-    font-weight: bold;
-}
-
 .text-left {
     text-align: left;
+}
+.bold-text {
+    font-weight: bold;
 }

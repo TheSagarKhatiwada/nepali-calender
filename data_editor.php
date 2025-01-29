@@ -25,11 +25,11 @@ function displayCalendar($year, $filePath) {
     $daysOfWeekEn = ['Sunday', 'Monday', 'Tuesday', 'Wenesday', 'Thursday', 'Friday', 'Saturday'];
 
     echo "<table>";
-    echo "<tr>";
-    for ($i = 0; $i < count($daysOfWeekNp); $i++) {
-        echo "<th>{$daysOfWeekNp[$i]}<br>{$daysOfWeekEn[$i]}</th>";
-    }
-    echo "</tr>";
+    echo "<tr>
+            <th>Date<br>Day</th>
+            <th></th>
+            <th></th>
+        </tr>";
 
     // Define selected year and month
     $selectedYear = isset($_GET['year']) ? (int)$_GET['year'] : date('Y');
@@ -40,8 +40,7 @@ function displayCalendar($year, $filePath) {
 
     // Define the months array
     $months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
 
     // Extract year and month from $metadata['en']
@@ -56,14 +55,7 @@ function displayCalendar($year, $filePath) {
     $currentDay = 0;
 
     foreach ($days as $day) {
-        // Add empty cells for offset
-        if ($currentDay == 0 && $day['d'] != 1) {
-            for ($i = 1; $i < $day['d']; $i++) {
-                echo "<td></td>";
-                $currentDay++;
-            }
-        }
-
+    
         // Format the calendar date to match the format of $today
         $calendarDate = sprintf('%04d-%02d-%02d', $selectedYear, $selectedMonth, $day['d']);
 
@@ -79,8 +71,7 @@ function displayCalendar($year, $filePath) {
         $class = $day['h'] ? "style='color:red; font-weight: 400;'" : "";
         echo "<td $class $isToday $isDayToday>";
         if ($day['n']) {
-            // echo "<span class='festiv' data-fulltext='" . htmlspecialchars($day['f'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars(mb_strimwidth($day['f'], 0, 20, '...'), ENT_QUOTES, 'UTF-8') . "</span><br>";
-            echo "<span class='festiv'>" . htmlspecialchars($day['f'], ENT_QUOTES, 'UTF-8') . "</span><br>";
+            echo "<span class='festiv' data-fulltext='" . htmlspecialchars($day['f'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars(mb_strimwidth($day['f'], 0, 20, '...'), ENT_QUOTES, 'UTF-8') . "</span><br>";
             echo "<span class='nep-day'>" . htmlspecialchars($day['n'], ENT_QUOTES, 'UTF-8') . "</span><br>";
             echo "<span class='tithi'>" . htmlspecialchars($day['t'], ENT_QUOTES, 'UTF-8') . "</span><br>";
             echo "<span class='eng-day'>" . htmlspecialchars($day['e'], ENT_QUOTES, 'UTF-8') . "</span>";
@@ -100,10 +91,6 @@ function displayCalendar($year, $filePath) {
         echo "<td></td>";
         $currentDay++;
     }
-
-    $events= $day['n'] . $day['f'] ;
-
-
     echo "</tr>";
     echo "</table>";
 }
@@ -158,81 +145,75 @@ $metadata = $data['metadata'];
 ?>
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Calendar Viewer</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <script>
-            // JavaScript for auto-submitting the form on dropdown change
-            function autoSubmit() {
-                document.getElementById("calendarForm").submit();
-            }
-        </script>
-    </head>
-    <body>
-        <div class="container">
-            <form method="POST" id="calendarForm" class="form-inline">
-                <div class="row">
-                    <!-- Nepali Year and Month -->
-                    <div class="year-month np">
-                        <span id="nepaliYear"><?php echo $metadata['np']; ?></span>
-                    </div>
-
-                    <!-- Select Boxes -->
-                    <div class="select-boxes">
-                        <select name="year" id="year" onchange="autoSubmit()" required>
-                            <?php
-                            foreach (getYearFolders('data') as $year) {
-                                $selected = ($year == $selectedYear) ? 'selected' : '';
-                                echo "<option value=\"$year\" $selected>" . htmlspecialchars($year) . "</option>";
-                            }
-                            ?>
-                        </select>
-                        <select name="month" id="month" onchange="autoSubmit()" required>
-                            <?php
-                            $months = getNepaliMonths();
-                            foreach ($months as $num => $name) {
-                                $selected = ($num == $selectedMonth) ? 'selected' : '';
-                                echo "<option value=\"$num\" $selected>" . htmlspecialchars($name) . "</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-
-                    <!-- English Year and Month -->
-                    <div class="year-month en">
-                        <span><?php echo $metadata['en']; ?></span>
-                    </div>
+<head>
+    <title>Calendar Viewer</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+        // JavaScript for auto-submitting the form on dropdown change
+        function autoSubmit() {
+            document.getElementById("calendarForm").submit();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form method="POST" id="calendarForm" class="form-inline">
+            <div class="row">
+                <!-- Nepali Year and Month -->
+                <div class="year-month np">
+                    <span id="nepaliYear"><?php echo $metadata['np']; ?></span>
                 </div>
-            </form>
-            <?php
-            // Display the calendar if the file exists
-            $filePath = "data/$selectedYear/$selectedMonth.json";
-            if (file_exists($filePath)) {
-                displayCalendar($selectedYear, $filePath);
-            } else {
-                echo "<p>No data available for Year: $selectedYear, Month: {$months[$selectedMonth]}.</p>";
-            }
-            ?>
-            <div class="events text-left">
-                <?php
-                    echo "<span style='font-weight: bold;'>Holidays and Festivals:</span></br>";
-                    $days = $data['days'];
-                    $currentDay = 0;
-                    foreach ($days as $day) {
-                        $class = $day['h'] ? "style='color:red;'" : "";
-                        if ($day['f']) {
-                            echo "<span style='font-weight: bold;'>" . htmlspecialchars($day['n'], ENT_QUOTES, 'UTF-8') . "</span><span> " . htmlspecialchars($day['f'], ENT_QUOTES, 'UTF-8') . "</span><br>";
-                        }
-                        echo "</td>";
-                        $currentDay++;
-                    };
-                    
-                ?>
-            </div>
-            </br>
-            <div class="text-left bold-text" id="time_check"></div>
-        </div>
 
-        <script src="timeScript.js"></script>    
-    </body>
+                <!-- Select Boxes -->
+                <div class="select-boxes">
+                    <select name="year" id="year" onchange="autoSubmit()" required>
+                        <?php
+                        foreach (getYearFolders('data') as $year) {
+                            $selected = ($year == $selectedYear) ? 'selected' : '';
+                            echo "<option value=\"$year\" $selected>" . htmlspecialchars($year) . "</option>";
+                        }
+                        ?>
+                    </select>
+                    <select name="month" id="month" onchange="autoSubmit()" required>
+                        <?php
+                        $months = getNepaliMonths();
+                        foreach ($months as $num => $name) {
+                            $selected = ($num == $selectedMonth) ? 'selected' : '';
+                            echo "<option value=\"$num\" $selected>" . htmlspecialchars($name) . "</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <!-- English Year and Month -->
+                <div class="year-month en">
+                    <span><?php echo $metadata['en']; ?></span>
+                </div>
+            </div>
+        </form>
+        <?php
+        // Display the calendar if the file exists
+        $filePath = "data/$selectedYear/$selectedMonth.json";
+        if (file_exists($filePath)) {
+            displayCalendar($selectedYear, $filePath);
+        } else {
+            echo "<p>No data available for Year: $selectedYear, Month: {$months[$selectedMonth]}.</p>";
+        }
+        ?>
+        <div class="events text-left">
+            <span>
+                <?php 
+                    echo "Holidays and Festivals:</br>";
+                    $holiFest = $data['holiFest'];
+                    foreach ($holiFest as $event) {
+                        echo htmlspecialchars($event, ENT_QUOTES, 'UTF-8') . "<br>";
+                    }
+                
+                ?>
+                    </span>
+        </div>
+    </div>
+
+    
+</body>
 </html>
